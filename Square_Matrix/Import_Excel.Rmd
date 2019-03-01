@@ -1,0 +1,32 @@
+---
+title: "Step 1 - Import Excel file"
+author: "Luciano Firpo"
+date: '2019-01-21'
+output:
+  md_document:
+    variant: markdown_github
+  html_notebook:
+    theme: united
+    toc: yes
+    toc_depth: 3
+---
+
+```{r setup,echo=FALSE, message=FALSE, results='hide'}
+Sys.setlocale("LC_ALL", "pt_BR.UTF-8")
+```
+
+```{r}
+#Library
+library(openxlsx) #import xlsx file
+library(dplyr)
+
+```
+
+```{r}
+#import excel file
+
+data_set <- read.xlsx(xlsxFile = "Input/dataset.xlsx")
+data_set <- unique(data_set)
+
+```
+

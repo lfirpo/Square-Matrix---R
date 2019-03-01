@@ -1,0 +1,74 @@
+---
+title: "Step 2 - Create a square matrix from dataset"
+author: "Luciano Firpo"
+date: '2019-01-21'
+output:
+  md_document:
+    variant: markdown_github
+  html_notebook:
+    theme: united
+    toc: yes
+    toc_depth: 3
+---
+
+```{r}
+# Create a frequency Matrix
+
+
+#Create a vector - product names (unique)
+Vector_Description <- sort(as.vector(unique(data_set$ProductDescription)))
+
+#Create an empty square matrix, rows and columns names receive Vector_Description
+Product_Matrix <- matrix(rep(0, length(Vector_Description)^2), ncol=length(Vector_Description))
+rownames(Product_Matrix) <- colnames(Product_Matrix) <- Vector_Description
+
+#Variable receives the Purchase Order
+Number_PO <- 0
+
+#Count dataset lines
+Tot_Lines <- nrow(data_set)
+```
+
+```{r}
+# Fill Square Matrix
+
+# progress bar
+pb <- txtProgressBar(min = 0, max = Tot_Lines, initial = 0, char = "=",
+               width = NA, title, label, style = 3, file = "")
+
+system.time(
+  for(i in 1:nrow(data_set)){
+    #print(toString(i))
+    #sub-query: new data set (df_ids), receives all records from an especific Purchase Order
+    df_ids <- data_set[data_set$OrderNumber==(data_set[i,1]),]
+    #if changed de purchase order
+    if (Number_PO != (data_set[i,1])){
+      #if df_ids returns more than 1 record, it means that we have multiple products combines
+      if (nrow(df_ids)>1) {
+        #Vector with products names combined
+        Vector_Aux <- as.vector(df_ids$ProductDescription)
+        #walk through the matrix to the correct coordinates (product name), lines and columns, and set the          #cell value adding 1
+        for(j in 1:length(Vector_Aux)){
+          for(auxvet in 1:length(Vector_Aux)){
+            if (j != auxvet){
+              Product_Matrix[Vector_Aux[j], Vector_Aux[auxvet]] <- Product_Matrix[Vector_Aux[j], Vector_Aux[auxvet]]+1
+            }
+          }
+        }
+      }else{
+        #if df_ids return onde record, it means a Purchase Order with just one product
+        strPrdDescription <- toString(df_ids$ProductDescription)
+        #set the same coordinate line and column, cell value adding 1
+        Product_Matrix[strPrdDescription, strPrdDescription] <- Product_Matrix[strPrdDescription, strPrdDescription]+1
+      }
+      Number_PO <- data_set[i,1]
+    }
+    #print(paste("Record: ", toString(i), " from: ", toString(Tot_Lines)))
+    #print(paste("Processing: ", toString(i/Tot_Lines *100),"%"))
+    setTxtProgressBar(pb, i, title = "Processing", label = paste("Processing: ", toString(i/Tot_Lines *100),"%"))
+  }
+)
+close(pb)
+
+```
+

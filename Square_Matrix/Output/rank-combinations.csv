@@ -1,0 +1,8 @@
+"","from","to","value","label","Description"
+"5","Pants","Shoes",2,2,"Pants + Shoes"
+"10","Shoes","Socks",2,2,"Shoes + Socks"
+"1","Pants","Pants",1,1,"Pants"
+"6","Shoes","Shoes",1,1,"Shoes"
+"9","Pants","Socks",1,1,"Pants + Socks"
+"13","Pants","t-shirt",1,1,"Pants + t-shirt"
+"15","Socks","t-shirt",1,1,"Socks + t-shirt"
